@@ -76,7 +76,7 @@ footer b{color:var(--ink)}
 /* drawer */
 .scrim{position:fixed;inset:0;background:rgba(30,20,14,.45);z-index:40;opacity:0;pointer-events:none;transition:opacity .25s}
 .scrim.show{opacity:1;pointer-events:auto}
-.drawer{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--cream);border-radius:26px 26px 0 0;max-height:92vh;overflow:auto;transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.9,.25,1);padding:10px 18px calc(24px + env(safe-area-inset-bottom));max-width:620px;margin:0 auto}
+.drawer{min-height:60vh;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--cream);border-radius:26px 26px 0 0;max-height:92vh;overflow:auto;transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.9,.25,1);padding:10px 18px calc(24px + env(safe-area-inset-bottom));max-width:620px;margin:0 auto}
 .drawer.show{transform:none}
 .grab{width:44px;height:5px;border-radius:9px;background:#D9CCB8;margin:4px auto 10px}
 .drawer h2{font-family:Fraunces,serif;font-weight:800;font-size:28px;display:flex;justify-content:space-between;align-items:center}
@@ -95,7 +95,9 @@ footer b{color:var(--ink)}
 .seg{display:flex;background:#fff;border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px}
 .seg button{flex:1;padding:11px;border-radius:10px;font-weight:600;font-size:15px}
 .seg button.on{background:var(--ink);color:#fff}
-.send{width:100%;margin-top:18px;background:#25D366;color:#fff;font-weight:800;font-size:17px;padding:17px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:10px}
+.confirm{width:100%;margin-top:18px;background:var(--red);color:#fff;font-weight:800;font-size:17px;padding:17px;border-radius:16px}.confirm:disabled,.send:disabled{opacity:.6}
+.done{position:fixed;inset:0;z-index:55;background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;gap:8px}.done[hidden]{display:none}.done .ok{width:72px;height:72px;border-radius:50%;background:var(--green);color:#fff;font-size:38px;display:flex;align-items:center;justify-content:center}.done h3{font-family:Fraunces,serif;font-size:30px;margin-top:8px}.done p{color:var(--muted)}.done .code{font-weight:800;font-size:34px;letter-spacing:2px;color:var(--red)}.done .add{margin-top:14px}
+.send{width:100%;margin-top:10px;background:#25D366;color:#fff;font-weight:800;font-size:17px;padding:17px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:10px}
 .send:disabled{background:#B8B0A4}
 .note{font-size:13px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.4}
 .err{color:var(--red);font-weight:600;font-size:14px;margin-top:8px;text-align:center}
@@ -131,13 +133,16 @@ footer b{color:var(--ink)}
   <div id="lines"></div>
   <div class="tot"><span>Total<small id="envioTxt">Envío gratis</small></span><span id="dTot">$0</span></div>
   <div class="f"><label for="cName">Tu nombre</label><input id="cName" autocomplete="name" placeholder="Ej: Juan"></div>
+  <div class="f"><label for="cTel">Tu teléfono</label><input id="cTel" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ej: 362 412 3456"></div>
   <div class="f"><label>¿Cómo lo querés?</label><div class="seg" id="segEnt"><button data-v="Envío a domicilio" class="on">Envío</button><button data-v="Retiro en el local">Retiro</button></div></div>
   <div class="f" id="addrBox"><label for="cAddr">Dirección</label><input id="cAddr" autocomplete="street-address" placeholder="Calle, número, barrio"></div>
   <div class="f"><label>Pago</label><div class="seg" id="segPay"><button data-v="Efectivo" class="on">Efectivo</button><button data-v="Transferencia">Transferencia</button></div></div>
   <div class="f"><label for="cNote">Aclaraciones (opcional)</label><textarea id="cNote" rows="2" placeholder="Ej: la promo con napolitana y árabes, sin aceitunas, cambio de $20.000…"></textarea></div>
   <div class="err" id="err"></div>
-  <button class="send" id="send"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9s-.5-.1-.7.1-.8.9-.9 1.1-.3.2-.6.1c-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2s0-.4.1-.6l.4-.5c.2-.2.2-.3.3-.5s0-.4 0-.5-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3 2 3.1 4.9 4.3c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4s.2-1.2.2-1.4c-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>Enviar pedido por WhatsApp</button>
-  <div class="note">Se abre WhatsApp con tu pedido escrito. Solo tenés que tocar enviar.</div>
+  <button class="confirm" id="confirm">Confirmar pedido</button>
+  <button class="send" id="send"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9s-.5-.1-.7.1-.8.9-.9 1.1-.3.2-.6.1c-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2s0-.4.1-.6l.4-.5c.2-.2.2-.3.3-.5s0-.4 0-.5-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3 2 3.1 4.9 4.3c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4s.2-1.2.2-1.4c-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>Enviar por WhatsApp</button>
+  <div class="note">"Confirmar pedido" se lo manda directo al local. Si preferís, también podés mandarlo por WhatsApp.</div>
+  <div id="done" class="done" hidden><div class="ok">✓</div><h3>¡Pedido enviado!</h3><p>Tu número de pedido es</p><div class="code" id="doneCode"></div><p id="doneTxt">Ya le llegó al local. Te van a escribir para confirmarlo.</p><button class="add" id="doneOk">Listo</button></div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -194,24 +199,40 @@ function drawLines(){
   if(!cart.length){$('#lines').innerHTML='<div class="empty">Tu pedido está vacío.</div>';return}
   $('#lines').innerHTML=cart.map(l=>{const x=lineInfo(l);if(!x)return'';return `<div class="line">${x.it.image_url?`<img src="${esc(x.it.image_url)}" alt="">`:'<img alt="">'}<div class="nm">${esc(x.it.name)}${x.o.label?`<small>${esc(x.o.label)}</small>`:''}</div><div class="rt"><div class="pr">${x.o.price>0?money(x.sub):'A consultar'}</div><div class="qtyin" data-id="${l.id}" data-k="${l.k}"><button data-d="-1" aria-label="Quitar uno">−</button><span>${l.q}</span><button data-d="1" aria-label="Agregar uno">+</button></div></div></div>`}).join('');
 }
-function openD(){drawLines();$('#scrim').classList.add('show');$('#drawer').classList.add('show');$('#err').textContent='';try{const c=JSON.parse(localStorage.getItem('fdc_client')||'{}');if(c.n&&!$('#cName').value)$('#cName').value=c.n;if(c.a&&!$('#cAddr').value)$('#cAddr').value=c.a}catch(e){}}
+function openD(){drawLines();$('#scrim').classList.add('show');$('#drawer').classList.add('show');$('#err').textContent='';try{const c=JSON.parse(localStorage.getItem('fdc_client')||'{}');if(c.n&&!$('#cName').value)$('#cName').value=c.n;if(c.a&&!$('#cAddr').value)$('#cAddr').value=c.a;if(c.t&&!$('#cTel').value)$('#cTel').value=c.t}catch(e){}}
 function closeD(){$('#scrim').classList.remove('show');$('#drawer').classList.remove('show')}
 $('#cartbar').onclick=openD;$('#scrim').onclick=closeD;$('#closeD').onclick=closeD;
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeD()});
 function seg(id,cb){document.querySelectorAll(id+' button').forEach(b=>b.onclick=()=>{document.querySelectorAll(id+' button').forEach(x=>x.classList.remove('on'));b.classList.add('on');cb&&cb(b.dataset.v)})}
 seg('#segEnt',v=>{$('#addrBox').style.display=v.startsWith('Envío')?'':'none'});seg('#segPay');
-$('#send').onclick=()=>{
+function collect(){
   const err=$('#err');err.textContent='';
-  if(!SET.open_today){err.textContent='Hoy no estamos tomando pedidos.';return}
-  if(!cart.length){err.textContent='Agregá algo a tu pedido.';return}
-  const name=$('#cName').value.trim(),ent=$('#segEnt .on').dataset.v,addr=$('#cAddr').value.trim(),pay=$('#segPay .on').dataset.v,note=$('#cNote').value.trim();
-  if(!name){err.textContent='Poné tu nombre.';$('#cName').focus();return}
-  if(ent.startsWith('Envío')&&!addr){err.textContent='Poné la dirección para el envío.';$('#cAddr').focus();return}
-  try{localStorage.setItem('fdc_client',JSON.stringify({n:name,a:addr}))}catch(e){}
-  let t=0;const ls=cart.map(l=>{const x=lineInfo(l);if(!x)return'';t+=x.sub;return `• ${l.q} × ${x.it.name}${x.o.label?' ('+x.o.label+')':''} — ${x.o.price>0?money(x.sub):'precio a consultar'}`}).filter(Boolean);
-  const msg=`¡Hola Fuego de Campo! 🔥 Quiero hacer un pedido:\n\n${ls.join('\n')}\n\n*Total: ${totTxt(t)}*\n\n👤 ${name}\n🛵 ${ent}${ent.startsWith('Envío')?': '+addr:''}\n💵 Pago: ${pay}${note?'\n📝 '+note:''}`;
-  window.open('https://wa.me/'+SET.whatsapp+'?text='+encodeURIComponent(msg),'_blank');
-};
+  if(!SET.open_today){err.textContent='Hoy no estamos tomando pedidos.';return null}
+  if(!cart.length){err.textContent='Agregá algo a tu pedido.';return null}
+  const d={name:$('#cName').value.trim(),tel:$('#cTel').value.trim(),ent:$('#segEnt .on').dataset.v,addr:$('#cAddr').value.trim(),pay:$('#segPay .on').dataset.v,note:$('#cNote').value.trim()};
+  if(!d.name){err.textContent='Poné tu nombre.';$('#cName').focus();return null}
+  if(d.tel.replace(/\D/g,'').length<8){err.textContent='Poné tu teléfono para que te puedan confirmar.';$('#cTel').focus();return null}
+  if(d.ent.startsWith('Envío')&&!d.addr){err.textContent='Poné la dirección para el envío.';$('#cAddr').focus();return null}
+  try{localStorage.setItem('fdc_client',JSON.stringify({n:d.name,t:d.tel,a:d.addr}))}catch(e){}
+  return d}
+async function register(d,via){
+  const r=await fetch(FDC.url+'/rest/v1/rpc/fdc_crear_pedido',{method:'POST',headers:{apikey:FDC.key,Authorization:'Bearer '+FDC.key,'Content-Type':'application/json'},
+    body:JSON.stringify({p_nombre:d.name,p_telefono:d.tel,p_entrega:d.ent,p_direccion:d.ent.startsWith('Envío')?d.addr:'',p_pago:d.pay,p_nota:d.note,p_items:cart.map(l=>({id:l.id,k:l.k,q:l.q})),p_via:via})});
+  if(!r.ok){const t=await r.text();throw new Error(t.includes('cerrado')?'cerrado':t.includes('limite')?'limite':'red')}
+  return (await r.json())}
+function waText(d,code){let t=0;const ls=cart.map(l=>{const x=lineInfo(l);if(!x)return'';t+=x.sub;return `• ${l.q} × ${x.it.name}${x.o.label?' ('+x.o.label+')':''} — ${x.o.price>0?money(x.sub):'precio a consultar'}`}).filter(Boolean);
+  return `¡Hola Fuego de Campo! 🔥 Quiero hacer un pedido${code?' (N° '+code+')':''}:\n\n${ls.join('\n')}\n\n*Total: ${totTxt(t)}*\n\n👤 ${d.name}\n📞 ${d.tel}\n🛵 ${d.ent}${d.ent.startsWith('Envío')?': '+d.addr:''}\n💵 Pago: ${d.pay}${d.note?'\n📝 '+d.note:''}`}
+function errMsg(e){return e.message==='cerrado'?'Hoy no estamos tomando pedidos.':e.message==='limite'?'Ya mandaste varios pedidos. Esperá unos minutos o escribinos por WhatsApp.':'No se pudo enviar. Revisá tu conexión o mandalo por WhatsApp.'}
+function finish(code,via){$('#doneCode').textContent=code;$('#doneTxt').textContent=via==='web'?'Ya le llegó al local. Te van a escribir para confirmarlo.':'Quedó registrado. Terminá de mandarlo en WhatsApp.';$('#done').hidden=false;cart=[];save();refreshCtls();updCart()}
+$('#confirm').onclick=async()=>{const d=collect();if(!d)return;const b=$('#confirm');b.disabled=true;b.textContent='Enviando…';
+  try{const code=await register(d,'web');finish(code,'web')}catch(e){$('#err').textContent=errMsg(e)}b.disabled=false;b.textContent='Confirmar pedido'};
+$('#send').onclick=async()=>{const d=collect();if(!d)return;
+  const w=window.open('about:blank','_blank');let code='';
+  try{code=await register(d,'whatsapp')}catch(e){if(e.message==='cerrado'){w&&w.close();$('#err').textContent=errMsg(e);return}}
+  const url='https://wa.me/'+SET.whatsapp+'?text='+encodeURIComponent(waText(d,code));
+  if(w)w.location.href=url;else location.href=url;
+  if(code)finish(code,'whatsapp')};
+$('#doneOk').onclick=()=>{$('#done').hidden=true;closeD()};
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1300)}
 function spy(){const tabs=[...document.querySelectorAll('#tabs a')];if(!tabs.length)return;tabs[0].classList.add('act');
   const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){tabs.forEach(t=>t.classList.toggle('act',t.getAttribute('href')==='#'+en.target.id));const a=tabs.find(t=>t.classList.contains('act'));a&&a.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'})}})},{rootMargin:'-45% 0px -50% 0px'});
