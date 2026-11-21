@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Panel · Fuego de Campo</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#2B1D16">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="manifest" href="panel.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--red:#C8371E;--ink:#2B1D16;--muted:#65564A;--cream:#FFF8EC;--line:#EADFCB;--green:#2F6B3A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;padding-bottom:100px}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,textarea,select{font:inherit;color:inherit}
+.top{background:var(--ink);color:#fff;padding:16px 18px calc(16px);position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.top h1{font-family:Fraunces,serif;font-size:22px;display:flex;align-items:center;gap:10px}
+.top h1 img{width:30px}
+.top a,.top button{color:#fff;font-size:14px;font-weight:600;opacity:.85;text-decoration:none}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+.box{background:#fff;border-radius:20px;padding:18px;box-shadow:0 1px 0 var(--line),0 8px 20px rgba(80,40,10,.05);margin-bottom:16px}
+.box h2{font-family:Fraunces,serif;font-size:22px;margin-bottom:12px}
+.f{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.f label{font-weight:600;font-size:14px}
+.f input,.f textarea,.f select{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:12px 13px;font-size:16px;outline:none;width:100%}
+.f input:focus,.f textarea:focus,.f select:focus{border-color:var(--ink)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{background:var(--red);color:#fff;font-weight:800;padding:13px 18px;border-radius:14px;font-size:16px}
+.btn.dark{background:var(--ink)}.btn.ghost{background:#F3EADB;color:var(--ink)}.btn.full{width:100%;margin-top:16px}
+.btn:disabled{opacity:.5}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0}
+.switch b{font-size:16px}.switch small{display:block;color:var(--muted);font-weight:400;font-size:13px}
+.tg{position:relative;width:54px;height:32px;flex:none}
+.tg input{opacity:0;width:0;height:0}
+.tg span{position:absolute;inset:0;background:#D6CBB9;border-radius:99px;transition:.2s}
+.tg span:before{content:"";position:absolute;width:26px;height:26px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tg input:checked+span{background:var(--green)}.tg input:checked+span:before{transform:translateX(22px)}
+.cat{font-weight:800;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin:22px 4px 8px}
+.it{display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:10px;margin-bottom:8px;box-shadow:0 1px 0 var(--line)}
+.it img,.it .ni{width:62px;height:62px;border-radius:12px;object-fit:cover;background:#EFE4D2;flex:none}
+.it .t{flex:1;min-width:0}
+.it .t b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.it .t span{color:var(--muted);font-size:14px}
+.it.off{opacity:.5}
+.ib{width:38px;height:38px;border-radius:10px;background:#F3EADB;font-size:16px;flex:none}
+.fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));background:var(--red);color:#fff;font-weight:800;padding:16px 22px;border-radius:999px;box-shadow:0 10px 24px rgba(200,55,30,.35);z-index:20;font-size:16px}
+.modal{position:fixed;inset:0;background:rgba(30,20,14,.5);z-index:30;display:none;align-items:flex-end;justify-content:center}
+.modal.show{display:flex}
+.sheet{background:var(--cream);width:100%;max-width:620px;max-height:94vh;overflow:auto;border-radius:24px 24px 0 0;padding:18px 18px calc(24px + env(safe-area-inset-bottom))}
+.sheet h2{font-family:Fraunces,serif;font-size:26px;display:flex;justify-content:space-between;align-items:center}
+.ph{margin-top:12px;border:2px dashed var(--line);border-radius:16px;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;position:relative;cursor:pointer}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph span{color:var(--muted);font-weight:600;text-align:center;padding:10px}
+.msg{margin-top:10px;font-weight:600;font-size:14px;text-align:center}
+.msg.e{color:var(--red)}.msg.ok{color:var(--green)}
+.login{max-width:420px;margin:60px auto;padding:0 16px}
+.login .box{padding:24px}
+.hint{color:var(--muted);font-size:13px;margin-top:6px;line-height:1.4}
+.toast{opacity:0;position:fixed;left:50%;bottom:90px;transform:translate(-50%,200%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-weight:600;z-index:60;transition:transform .3s}
+.toast.show{transform:translate(-50%,0);opacity:1}
+</style>
+</head>
+<body>
+<div id="vLogin" class="login" hidden>
+  <div style="text-align:center;margin-bottom:18px"><img src="logo.svg" width="70" alt=""><h1 style="font-family:Fraunces,serif;font-size:30px;margin-top:8px">Panel de la carta</h1><p class="hint">Fuego de Campo</p></div>
+  <form class="box" id="fLogin">
+    <div class="f"><label for="lE">Email</label><input id="lE" type="email" autocomplete="username" required></div>
+    <div class="f"><label for="lP">Contraseña</label><input id="lP" type="password" autocomplete="current-password" required></div>
+    <button class="btn full" id="bLogin">Entrar</button>
+    <div class="msg e" id="lMsg"></div>
+  </form>
+</div>
+
+<div id="vApp" hidden>
+  <div class="top"><h1><img src="logo.svg" alt="">Panel</h1><div style="display:flex;gap:16px"><a href="./" target="_blank">Ver carta ↗</a><button id="bOut">Salir</button></div></div>
+  <div class="wrap">
+    <div class="box">
+      <h2>Hoy</h2>
+      <div class="switch"><div><b>Estamos trabajando hoy</b><small>Si lo apagás, la gente ve la carta pero no puede mandar pedidos.</small></div><label class="tg"><input type="checkbox" id="sOpen"><span></span></label></div>
+      <div class="f"><label for="sBanner">Cartel de arriba</label><input id="sBanner" maxlength="60"></div>
+      <div class="row2">
+        <div class="f"><label for="sWa">WhatsApp de pedidos</label><input id="sWa" inputmode="numeric" placeholder="5493624802630"></div>
+        <div class="f"><label for="sEnv">Nota de envío</label><input id="sEnv" maxlength="40"></div>
+      </div>
+      <div class="f"><label for="sAddr">Dirección</label><input id="sAddr" maxlength="90"></div>
+      <button class="btn dark full" id="bSet">Guardar</button>
+    </div>
+    <div id="list"></div>
+  </div>
+  <button class="fab" id="bNew">+ Nuevo plato</button>
+</div>
+
+<div class="modal" id="mEdit"><div class="sheet">
+  <h2><span id="eTitle">Nuevo plato</span><button class="ib" id="eClose" aria-label="Cerrar">✕</button></h2>
+  <label class="ph" id="ePh" for="eFile"><span>Tocá para subir una foto</span></label>
+  <input type="file" id="eFile" accept="image/*" hidden>
+  <div class="f"><label for="eCat">Categoría</label><input id="eCat" list="cats" placeholder="Pizzas, Empanadas, Promos…"><datalist id="cats"></datalist></div>
+  <div class="f"><label for="eName">Nombre</label><input id="eName" maxlength="60"></div>
+  <div class="f"><label for="eDesc">Descripción (opcional)</label><textarea id="eDesc" rows="2" maxlength="160"></textarea></div>
+  <div class="row2">
+    <div class="f"><label for="eP1">Precio</label><input id="eP1" inputmode="numeric" placeholder="15000"></div>
+    <div class="f"><label for="eL1">Aclaración del precio</label><input id="eL1" placeholder="Ej: ½ docena" maxlength="30"></div>
+  </div>
+  <div class="row2">
+    <div class="f"><label for="eP2">2º precio (opcional)</label><input id="eP2" inputmode="numeric" placeholder="Ej: 15000"></div>
+    <div class="f"><label for="eL2">Aclaración</label><input id="eL2" placeholder="Ej: Docena" maxlength="30"></div>
+  </div>
+  <p class="hint">Precio en 0 = aparece "A consultar". El 2º precio sirve para docena / media docena, chica / grande, etc.</p>
+  <div class="switch" style="margin-top:10px"><div><b>Visible en la carta</b><small>Apagalo si hoy no hay.</small></div><label class="tg"><input type="checkbox" id="eAct" checked><span></span></label></div>
+  <button class="btn full" id="eSave">Guardar plato</button>
+  <button class="btn ghost full" id="eDel" style="margin-top:8px;color:var(--red)">Borrar plato</button>
+  <div class="msg" id="eMsg"></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const sb=supabase.createClient(FDC.url,FDC.key);
+const money=n=>Number(n)>0?'$'+Number(n).toLocaleString('es-AR'):'A consultar';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>{const n=parseInt(String(v).replace(/\D/g,''),10);return isNaN(n)?null:n};
+let ITEMS=[],EDIT=null,NEWFILE=null;
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1800)}
+function img(u){if(!u)return'';return u}
+
+async function boot(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){$('#vLogin').hidden=false;$('#vApp').hidden=true;return}
+  const {data:ok}=await sb.rpc('fdc_is_admin');
+  if(!ok){$('#vLogin').hidden=false;$('#vApp').hidden=true;$('#lMsg').textContent='Esta cuenta no tiene permiso para editar la carta.';await sb.auth.signOut();return}
+  $('#vLogin').hidden=true;$('#vApp').hidden=false;
+  await Promise.all([loadSet(),loadItems()]);
+}
+$('#fLogin').onsubmit=async e=>{e.preventDefault();$('#lMsg').textContent='';$('#bLogin').disabled=true;
+  const {error}=await sb.auth.signInWithPassword({email:$('#lE').value.trim(),password:$('#lP').value});
+  $('#bLogin').disabled=false;if(error){$('#lMsg').textContent='Email o contraseña incorrectos.';return}boot()};
+$('#bOut').onclick=async()=>{await sb.auth.signOut();location.reload()};
+
+async function loadSet(){const {data}=await sb.from('fdc_settings').select('*').eq('id',1).single();if(!data)return;
+  $('#sOpen').checked=data.open_today;$('#sBanner').value=data.banner;$('#sWa').value=data.whatsapp;$('#sEnv').value=data.delivery_note;$('#sAddr').value=data.address}
+$('#sOpen').onchange=async()=>{const {error}=await sb.from('fdc_settings').update({open_today:$('#sOpen').checked,updated_at:new Date().toISOString()}).eq('id',1);toast(error?'No se pudo guardar':($('#sOpen').checked?'Abierto: se pueden mandar pedidos':'Cerrado: no se toman pedidos'))};
+$('#bSet').onclick=async()=>{const wa=$('#sWa').value.replace(/\D/g,'');if(wa.length<10){toast('Revisá el número de WhatsApp');return}
+  const {error}=await sb.from('fdc_settings').update({banner:$('#sBanner').value.trim()||'Estamos trabajando hoy',whatsapp:wa,delivery_note:$('#sEnv').value.trim(),address:$('#sAddr').value.trim(),updated_at:new Date().toISOString()}).eq('id',1);
+  toast(error?'No se pudo guardar':'Guardado')};
+
+async function loadItems(){const {data,error}=await sb.from('fdc_items').select('*').order('sort').order('created_at');if(error){toast('No se pudo cargar la carta');return}ITEMS=data;draw()}
+function cats(){const c=[...new Set(ITEMS.map(i=>i.category))];return c.sort((a,b)=>{const ia=FDC.catOrder.indexOf(a),ib=FDC.catOrder.indexOf(b);return (ia<0?99:ia)-(ib<0?99:ib)})}
+function draw(){
+  $('#cats').innerHTML=[...new Set([...FDC.catOrder,...cats()])].map(c=>`<option value="${esc(c)}">`).join('');
+  $('#list').innerHTML=cats().map(c=>{const its=ITEMS.filter(i=>i.category===c);return `<div class="cat">${esc(c)}</div>`+its.map((it,k)=>`<div class="it${it.active?'':' off'}">
+    ${it.image_url?`<img src="${esc(img(it.image_url))}" alt="">`:'<div class="ni"></div>'}
+    <div class="t"><b>${esc(it.name)}</b><span>${money(it.price)}${it.price_label?' · '+esc(it.price_label):''}${it.price2?' / '+money(it.price2)+(it.price2_label?' · '+esc(it.price2_label):''):''}${it.active?'':' · oculto'}</span></div>
+    <button class="ib" data-up="${it.id}" aria-label="Subir" ${k===0?'disabled style="opacity:.3"':''}>↑</button>
+    <button class="ib" data-ed="${it.id}" aria-label="Editar">✎</button></div>`).join('')}).join('')||'<p class="hint">Todavía no hay platos.</p>';
+}
+document.addEventListener('click',async e=>{
+  const ed=e.target.closest('[data-ed]');if(ed){open(ITEMS.find(i=>i.id===ed.dataset.ed));return}
+  const up=e.target.closest('[data-up]');if(up){const it=ITEMS.find(i=>i.id===up.dataset.up);const sib=ITEMS.filter(i=>i.category===it.category);const k=sib.indexOf(it);if(k<1)return;
+    // reordenar: reasigna sort consecutivo dentro de la categoría
+    [sib[k-1],sib[k]]=[sib[k],sib[k-1]];const base=Math.min(...sib.map(s=>s.sort));
+    await Promise.all(sib.map((s,i)=>s.sort===base+i?null:sb.from('fdc_items').update({sort:base+i}).eq('id',s.id)));loadItems();}
+});
+function open(it){EDIT=it||null;NEWFILE=null;$('#eMsg').textContent='';$('#eMsg').className='msg';
+  $('#eTitle').textContent=it?'Editar plato':'Nuevo plato';$('#eDel').hidden=!it;
+  $('#eCat').value=it?it.category:'';$('#eName').value=it?it.name:'';$('#eDesc').value=it?it.description:'';
+  $('#eP1').value=it&&it.price?it.price:'';$('#eL1').value=it?it.price_label||'':'';$('#eP2').value=it&&it.price2?it.price2:'';$('#eL2').value=it?it.price2_label||'':'';
+  $('#eAct').checked=it?it.active:true;
+  $('#ePh').innerHTML=it&&it.image_url?`<img src="${esc(img(it.image_url))}" alt="">`:'<span>Tocá para subir una foto</span>';
+  $('#mEdit').classList.add('show')}
+$('#bNew').onclick=()=>open(null);
+$('#eClose').onclick=()=>$('#mEdit').classList.remove('show');
+$('#mEdit').onclick=e=>{if(e.target.id==='mEdit')$('#mEdit').classList.remove('show')};
+$('#eFile').onchange=async()=>{const f=$('#eFile').files[0];if(!f)return;NEWFILE=await shrink(f);$('#ePh').innerHTML=`<img src="${URL.createObjectURL(NEWFILE)}" alt="">`};
+function shrink(file){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>{const M=1200,s=Math.min(1,M/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);c.toBlob(b=>b?res(b):rej(),'image/jpeg',.84)};im.onerror=rej;im.src=URL.createObjectURL(file)})}
+$('#eSave').onclick=async()=>{
+  const m=$('#eMsg');m.className='msg e';
+  const row={category:$('#eCat').value.trim()||'Otros',name:$('#eName').value.trim(),description:$('#eDesc').value.trim(),price:num($('#eP1').value)||0,price_label:$('#eL1').value.trim()||null,price2:num($('#eP2').value),price2_label:$('#eL2').value.trim()||null,active:$('#eAct').checked};
+  if(!row.name){m.textContent='Poné el nombre del plato.';return}
+  if(row.price2===0)row.price2=null;
+  $('#eSave').disabled=true;m.className='msg';m.textContent='Guardando…';
+  try{
+    if(NEWFILE){const path='platos/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.jpg';
+      const {error:ue}=await sb.storage.from(FDC.bucket).upload(path,NEWFILE,{contentType:'image/jpeg',upsert:false});if(ue)throw ue;
+      row.image_url=sb.storage.from(FDC.bucket).getPublicUrl(path).data.publicUrl}
+    if(EDIT){const {error}=await sb.from('fdc_items').update(row).eq('id',EDIT.id);if(error)throw error}
+    else{row.sort=Math.max(0,...ITEMS.filter(i=>i.category===row.category).map(i=>i.sort))+1;const {error}=await sb.from('fdc_items').insert(row);if(error)throw error}
+    $('#mEdit').classList.remove('show');toast('Guardado');loadItems();
+  }catch(err){m.className='msg e';m.textContent='No se pudo guardar. Revisá la conexión e intentá de nuevo.';console.error(err)}
+  $('#eSave').disabled=false};
+$('#eDel').onclick=async()=>{if(!EDIT)return;if(!confirm('¿Borrar "'+EDIT.name+'" de la carta?'))return;
+  const {error}=await sb.from('fdc_items').delete().eq('id',EDIT.id);if(error){$('#eMsg').className='msg e';$('#eMsg').textContent='No se pudo borrar.';return}
+  $('#mEdit').classList.remove('show');toast('Borrado');loadItems()};
+sb.auth.onAuthStateChange((ev)=>{if(ev==='SIGNED_OUT'){$('#vApp').hidden=true;$('#vLogin').hidden=false}});
+boot();
+</script>
+</body>
+</html>
